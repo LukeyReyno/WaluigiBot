@@ -1,0 +1,9 @@
+version: '2.4'
+services:
+  waluigibot:
+    build: .
+    restart: unless-stopped
+    container_name: waluigibot
+    cpus: 0.7
+    volumes:
+      - ~/WaluigiData:/waluigibot/data

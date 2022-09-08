@@ -1,0 +1,7 @@
+discord.py==1.7.2
+PyNaCL==1.4.0
+asyncpraw
+tweepy
+beautifulsoup4
+discord-py-slash-command==3.0.1
+pokebase
