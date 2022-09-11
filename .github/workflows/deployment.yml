@@ -25,5 +25,5 @@ jobs:
           git pull origin main
           git status
           echo ${{ secrets.PRIV_KEY }} > priv_key.txt
-          echo ${{ secrets.BOT_TOKEN }} > WahToken.txt
+          echo ${{ secrets.BOT_TOKEN }} > .env
           docker-compose up -d --build

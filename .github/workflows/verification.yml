@@ -1,0 +1,24 @@
+name: Discord Bot Verification
+
+on: pull_request
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up python environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    - name: Run Development Bot with Test Argument
+      run: |
+        pip install -r requirements.txt
+        echo ${{ secrets.DEV_BOT_TOKEN }} > .env
+        echo ${{ secrets.TEST_CHANNEL_ID }} >> .env
+        python3 WaluigiBot.py --test

@@ -1,19 +1,26 @@
+import argparse
 import discord
 import random
 import asyncio
 import time
 import datetime
+import os
 
+from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from json import *
 from discord.ext.commands.errors import *
 from discord_slash import SlashCommand 
 from functions.dailyRequests import fullDailyRoutine
 from functions.constants import GAME_STATS_FILE, COMMAND_STATS_FILE
+from tests.command_tests import DiscordBotTestRunner
 
-TOKENFile = open("WahToken.txt", "r")
-for line in TOKENFile:
-    TOKEN = line
+parser = argparse.ArgumentParser()
+parser.add_argument('--test', action='store_true', help='sets up discord bot test runner')
+args = parser.parse_args()
+
+load_dotenv()
+TOKEN = os.getenv("BOT_TOKEN")
 
 intents = discord.Intents.default()
 intents.members = True
@@ -40,14 +47,21 @@ async def on_ready():
 
     upDate = datetime.datetime.now().date()
     print(upDate)
-    with open(COMMAND_STATS_FILE, "r") as INFile:
-        WahDict = load(INFile)
-    WahDict["upDate"] = str(upDate)
-    with open(COMMAND_STATS_FILE, "w") as OUTFile:
-        dump(WahDict, OUTFile, indent="  ")
 
-    print('-------')
     await bot.change_presence(activity=discord.Game(name="Mario Kart 8 Deluxe | wah help"))
+    
+    if args.test:
+        print('----Tester----')
+        testRunner = DiscordBotTestRunner(bot)
+        await testRunner.run_test()
+    else:
+        print('-------')
+        bot.loop.create_task(background_loop())
+        with open(COMMAND_STATS_FILE, "r") as INFile:
+            WahDict = load(INFile)
+        WahDict["upDate"] = str(upDate)
+        with open(COMMAND_STATS_FILE, "w") as OUTFile:
+            dump(WahDict, OUTFile, indent="  ")
 
 cogs = [
     "commands.basic", 
@@ -145,5 +159,4 @@ async def on_command_error(ctx, error):
     else:
         return await ctx.send("`ERROR: Looks like something bad happened.`")
 
-bot.loop.create_task(background_loop())
 bot.run(TOKEN)
