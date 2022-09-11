@@ -1,0 +1,22 @@
+name: Discord Bot Verification
+
+on: pull_request
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Python Test with Development Bot
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    - run: |
+        pip install -r requirements.txt
+        echo ${{ secrets.DEV_BOT_TOKEN }} > WahToken.txt
+        python3 WaluigiBot.py --test
